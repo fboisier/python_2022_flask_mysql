@@ -1,4 +1,4 @@
-from mysqlconnection import connectToMySQL
+from flask_crud.config.mysqlconnection import connectToMySQL
 
 class Pais:
     def __init__(self, data):

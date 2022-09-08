@@ -1,18 +1,17 @@
 from flask_crud.config.mysqlconnection import connectToMySQL
-from flask_crud.models import ciudades
 
-class Pais:
+class Ciudad:
     def __init__(self, data):
         self.id = data['id']
         self.nombre = data['nombre']
+        self.pais = data['paises.nombre']
+        self.pais_id = data['paises.id']
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
 
-        self.ciudades = []
-
     @classmethod
     def get_all(cls):
-        query = "SELECT * FROM paises;"
+        query = "SELECT * FROM ciudades JOIN paises ON ciudades.pais_id = paises.id;"
         results = connectToMySQL('cd_primera_base').query_db(query)
         all_data = []
         for data in results:
@@ -21,34 +20,16 @@ class Pais:
 
     @classmethod
     def get_by_id(cls, id):
-        query = "SELECT * FROM paises JOIN ciudades ON ciudades.pais_id = paises.id WHERE paises.id = %(id)s"
+        query = f"SELECT * FROM ciudades JOIN paises ON ciudades.pais_id = paises.id where ciudades.id = %(id)s;"
         data = { 'id' : id }
         results = connectToMySQL('cd_primera_base').query_db(query, data)
-        #if len(results) > 0:
-        #    return cls(results[0])
-        #else:
-        #    return None
-        pais = cls(results[0]) if len(results) > 0 else None
-        for fila in results:
-            
-            ciudad_dato = {
-                'id' :fila['ciudades.id'],
-                'nombre' :fila['ciudades.nombre'],
-                'paises.nombre' :fila['nombre'],
-                'paises.id' :fila['id'],
-                'created_at' :fila['ciudades.created_at'],
-                'updated_at' :fila['ciudades.updated_at'],
-            }
-
-            pais.ciudades.append(ciudades.Ciudad(ciudad_dato))
-
-        return pais
+        return cls(results[0]) if len(results) > 0 else None
 
     @classmethod
     def save(cls, data):
         query = """
-                INSERT INTO paises (id,nombre,created_at,updated_at)
-                VALUES (%(id)s, %(nombre)s, NOW(), NOW());
+                INSERT INTO ciudades (nombre,created_at,updated_at, pais_id)
+                VALUES (%(nombre)s, NOW(), NOW(), %(pais_id)s);
                 """
         resultado = connectToMySQL('cd_primera_base').query_db(query, data)
         print("RESULTADO: ", resultado)
@@ -56,14 +37,14 @@ class Pais:
 
     @classmethod
     def update(cls,data):
-        query = "UPDATE paises SET nombre = %(nombre)s, updated_at=NOW() WHERE id = %(id)s"
+        query = "UPDATE ciudades SET nombre = %(nombre)s, updated_at=NOW(), pais_id = %(pais_id)s WHERE id = %(id)s"
         resultado = connectToMySQL('cd_primera_base').query_db(query, data)
         print("RESULTADO: ", resultado)
         return resultado
 
     @classmethod
     def delete(cls,id):
-        query = "DELETE FROM paises WHERE id = %(id)s"
+        query = "DELETE FROM ciudades WHERE id = %(id)s"
         data = {
             'id': id
         }

@@ -1,5 +1,10 @@
 from flask_crud.config.mysqlconnection import connectToMySQL
 from flask_crud.models import ciudades
+from flask import flash
+import re
+
+REGEX_PRIMERA_MAYUSCULA = re.compile(r'^[A-Z][a-z0-9_-]{0,}$')
+REGEX_CORREO_VALIDO = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 
 class Pais:
     def __init__(self, data):
@@ -70,3 +75,17 @@ class Pais:
         resultado = connectToMySQL('cd_primera_base').query_db(query, data)
         print("RESULTADO: ", resultado)
         return resultado
+
+    @staticmethod
+    def validar_pais(pais):
+
+        is_valid = True
+        if len(pais['nombre']) <= 3:
+            flash('El largo del nombre no puede ser menor o igual 3', 'error')
+            is_valid = False
+
+        if not REGEX_PRIMERA_MAYUSCULA.match(pais['nombre']):
+            flash('Como es un pais, la primera letra es en Mayúscula', 'error')
+            is_valid = False
+
+        return is_valid

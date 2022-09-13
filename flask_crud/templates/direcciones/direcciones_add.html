@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block titulo %}Agregar Dirección{% endblock %}
+{% block contenido %}
+
+
+{% include '_menu.html' %}
+
+<div class="container mt-5">
+    <h1>Agregar Dirección</h1>
+
+
+    <div class="row mt-3">
+        <div class="col-sm-12 col-md-6">
+            <form action="/direcciones/agregar/procesar" method="post">
+
+                <div class="mb-3 row">
+                    <label for="tipodireccion_id" class="col-sm-3 col-form-label">Tipo de Dirección</label>
+                    <div class="col-sm-9">
+                        <select name="tipodireccion_id" id="tipodireccion_id" class="form-select" aria-label="Default select example">
+                            {% for tipo in tipos%}
+                                <option value="{{tipo.id}}">{{tipo.nombre}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label for="nombre" class="col-sm-3 col-form-label">Nombre</label>
+                    <div class="col-sm-9">
+                        <input type="text" required class="form-control" id="nombre" name="nombre" placeholder="ej: España" >
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label for="numero" class="col-sm-3 col-form-label">Número</label>
+                    <div class="col-sm-9">
+                        <input type="number" required class="form-control" id="numero" name="numero" placeholder="ej: 607" >
+                    </div>
+                </div>
+                
+                <div class="mb-3 row">
+                    <label for="ciudad_id" class="col-sm-3 col-form-label">Ciudades</label>
+                    <div class="col-sm-9">
+                        <select name="ciudad_id" id="ciudad_id" class="form-select" aria-label="Default select example">
+                            {% for ciudad in ciudades%}
+                                <option value="{{ciudad.id}}">{{ciudad.nombre}} - {{ciudad.pais}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="mb-3 row">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+</div>
+
+{% endblock %}

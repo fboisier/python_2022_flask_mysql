@@ -15,13 +15,13 @@
                 <div class="mb-3 row">
                     <label for="id" class="col-sm-2 col-form-label">Identificador</label>
                     <div class="col-sm-10">
-                        <input type="text" required class="form-control" id="id" name="id" placeholder="ej. 1">
+                        <input type="text" required class="form-control" id="id" name="id" placeholder="ej. 1" value="{% if session.post_error %}{{session['post_id']}}{% endif%}">
                     </div>
                 </div>
                 <div class="mb-3 row">
                     <label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
                     <div class="col-sm-10">
-                        <input type="text" required class="form-control" id="nombre" name="nombre" placeholder="ej: España" >
+                        <input type="text" required class="form-control" id="nombre" name="nombre" placeholder="ej: España" value="{% if session.post_error %}{{session['post_nombre']}}{% endif%}" >
                     </div>
                 </div>
                 <div class="mb-3 row">

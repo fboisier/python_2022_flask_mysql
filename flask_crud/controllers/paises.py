@@ -1,6 +1,6 @@
 from flask_crud import app
 from flask_crud.models.pais import Pais
-from flask import render_template, flash, redirect, request
+from flask import render_template, flash, redirect, request, session
 
 
 @app.route("/paises")
@@ -19,12 +19,19 @@ def paises_agregar():
 @app.route("/paises/agregar/procesar", methods=["POST"])
 def paises_agregar_procesar():
     
+    if not Pais.validar_pais(request.form):
+        session['post_error'] = True
+        session['post_nombre'] = request.form['nombre']
+        session['post_id'] = request.form['id']
+        return redirect('/paises/crear')
+
     data = {
         'id' : request.form['id'],
         'nombre' : request.form['nombre'],
     }
 
     Pais.save(data)
+    session['post_error'] = False
     flash(f"Exito al agregar el pais {data['nombre']}","success")
     return redirect("/paises")
 
